@@ -4,7 +4,7 @@ import { connect as mqttConnection } from 'mqtt';
 
 const rl = readline.createInterface({ input, output });
 
-const client = mqttConnection('mqtt://broker.hivemq.com');
+const client = mqttConnection('mqtt://teste.gholias.com:1884');
 const requestTopic = 'its/165063/sys/info';
 const responseTopic = 'its_dados';
 
@@ -13,7 +13,7 @@ const message = JSON.stringify({ n: 'read_all', u: '/', vb: true });
 
 // Se inscreve no tópico
 client.on('connect', () => {
-  console.log('Connected to mqtt://broker.hivemq.com');
+  console.log('Connected to mqtt://teste.gholias.com:1884');
 
   client.subscribe(requestTopic);
   client.subscribe(responseTopic);
@@ -21,7 +21,9 @@ client.on('connect', () => {
   client.publish(requestTopic, message, { qos: 0, retain: false });
 
   client.on('message', (topic, payload) => {
+    const response = payload.toString();
     console.log(`\ntopic: ${topic} \npayload: ${payload}`);
+    console.table(JSON.parse(response));
   })
 });
 
